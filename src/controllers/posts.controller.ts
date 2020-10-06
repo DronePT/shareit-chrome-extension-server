@@ -1,9 +1,21 @@
 import koa from 'koa';
 import { PostsService } from '../services/posts.service';
 import { SharePostDto } from '../dto/share-post.dto';
+import { Server } from 'socket.io';
 
 export class PostsController {
-  static async shareUrl(ctx: koa.Context): Promise<void> {
+  static async getPosts(ctx: koa.Context): Promise<void> {
+    const { page = '1', perPage = '50' } = ctx.query;
+
+    const posts = await PostsService.getPosts({
+      page: parseInt(page),
+      perPage: Math.min(parseInt(perPage), 50),
+    });
+
+    ctx.body = posts;
+  }
+
+  static async shareUrl(ctx: koa.Context & { io: Server }): Promise<void> {
     const { body } = ctx.request;
 
     const dto = new SharePostDto();

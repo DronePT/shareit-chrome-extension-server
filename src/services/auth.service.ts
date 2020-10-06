@@ -4,6 +4,7 @@ import { HttpError } from '../lib/http-error';
 import { JWT } from '../lib/jwt';
 
 export interface User {
+  id: string;
   email: string;
   password: string;
   name: string;
@@ -25,10 +26,10 @@ export class AuthService {
       user = await UserModel.findOneOrCreate(loginDto);
     }
 
-    const { email, name, avatar } = user;
+    const { email, name, avatar, _id: id } = user;
 
     // Create JWT token
-    const publicUser = { email, name, avatar };
+    const publicUser = { id, email, name, avatar };
 
     return { ...publicUser, token: JWT.sign(publicUser) };
   }

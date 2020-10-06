@@ -7,4 +7,5 @@ export const appRouter = new Router();
 
 appRouter.post('/signin', AuthController.signin);
 appRouter.get('/me', validateTokenMiddleware(), AuthController.getMe);
+appRouter.get('/posts', validateTokenMiddleware(), PostsController.getPosts);
 appRouter.post('/share', validateTokenMiddleware(), PostsController.shareUrl);
