@@ -1,8 +1,10 @@
 import { PostModel } from '../database/posts/post.model';
 import { IPost, IPostDocument } from '../database/posts/post.types';
+import { LikePostDto } from '../dto/like-post.dto';
 
 import { SharePostDto } from '../dto/share-post.dto';
 import { getMetadata, UrlMetadata } from '../lib/get-metadata';
+import { HttpError } from '../lib/http-error';
 import { User } from './auth.service';
 
 export interface Post extends UrlMetadata {
@@ -15,6 +17,24 @@ interface GetPostsFilters {
 }
 
 export class PostsService {
+  static async likePost(dto: LikePostDto): Promise<IPostDocument> {
+    const post = await PostModel.findById(dto.postId);
+
+    if (!post) {
+      throw new HttpError('post not found', 404);
+    }
+
+    if (post.likes.indexOf(dto.user.id) > -1) {
+      throw new HttpError(`You've already liked this post!`, 403);
+    }
+
+    post.likes.push(dto.user.id);
+
+    await post.save();
+
+    return post;
+  }
+
   static async getPosts(filters: GetPostsFilters): Promise<IPostDocument[]> {
     const { page, perPage } = filters;
 
