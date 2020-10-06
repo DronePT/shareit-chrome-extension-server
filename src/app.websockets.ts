@@ -2,6 +2,8 @@ import socketio from 'socket.io';
 import http from 'http';
 import Koa from 'koa';
 import { getMetadata } from './lib/get-metadata';
+import { HttpError } from './lib/http-error';
+import { AuthService } from './services/auth.service';
 
 const sockets: Record<string, socketio.Socket> = {};
 
@@ -13,6 +15,23 @@ export const setupWebsockets = (app: Koa, server: http.Server): void => {
   // Inject socket.io into KOa context to be accessible through
   // all middlewares.
   app.context.io = io;
+
+  io.use((socket, next) => {
+    try {
+      const { token } = socket.handshake.query;
+
+      AuthService.validate(token);
+
+      next();
+    } catch (error) {
+      if (error.name && error.name === 'JsonWebTokenError') {
+        next(new HttpError('Invalid token', 401));
+        return;
+      }
+
+      next(error);
+    }
+  });
 
   io.on('connection', (socket) => {
     sockets[socket.id] = socket;
