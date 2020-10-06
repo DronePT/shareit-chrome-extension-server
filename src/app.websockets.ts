@@ -1,7 +1,7 @@
 import socketio from 'socket.io';
 import http from 'http';
 import Koa from 'koa';
-import { getMetadata } from './lib/get-metadata';
+
 import { HttpError } from './lib/http-error';
 import { AuthService } from './services/auth.service';
 
@@ -46,12 +46,6 @@ export const setupWebsockets = (app: Koa, server: http.Server): void => {
       console.warn(`disconnected: ${socket.id}`);
 
       io.emit('message', { count: getSocketsCount() });
-    });
-
-    socket.on('url', async (targetUrl) => {
-      const metadata = await getMetadata(targetUrl);
-
-      io.emit('new-share', metadata);
     });
   });
 };

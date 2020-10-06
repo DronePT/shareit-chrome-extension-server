@@ -1,5 +1,4 @@
 import { Document, Model } from 'mongoose';
-import { IUser } from '../users/user.types';
 
 export interface IPost {
   url: string;

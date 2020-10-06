@@ -10,8 +10,12 @@ export async function findOneOrCreate(
   if (record) {
     return record;
   } else {
-    return (await this.create<Partial<IPost>>(post))
+    const created = await this.create<Partial<IPost>>(post);
+
+    const populatedPost = (await this.findById(created._id)
       .populate({ path: 'sharedBy', select: { name: 1, avatar: 1 } })
-      .populate({ path: 'likes', select: { name: 1, avatar: 1 } });
+      .populate({ path: 'likes', select: { name: 1, avatar: 1 } })) as IPostDocument;
+
+    return populatedPost;
   }
 }
