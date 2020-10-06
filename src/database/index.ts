@@ -10,8 +10,6 @@ export class Database {
 
     const { MONGO_URI: uri = 'mongodb://shareit:shareit@localhost:27017/shareit' } = process.env;
 
-    console.warn('connecting to:', uri);
-
     Mongoose.connect(uri, {
       useNewUrlParser: true,
       useFindAndModify: true,

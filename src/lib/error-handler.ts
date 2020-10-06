@@ -24,7 +24,7 @@ export const errorHandler = () => async (ctx: koa.Context, next: () => void): Pr
         body.stack = error.stack;
       }
 
-      console.dir(error);
+      console.error(error);
 
       ctx.body = body;
       return;
