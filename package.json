@@ -6,11 +6,13 @@
   "author": "André Alves <dronept@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "start": "node dist",
     "dev": "nodemon",
     "build": "tsc"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
+    "@types/cheerio": "^0.22.22",
     "@types/gravatar": "^1.8.1",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/koa": "^2.11.4",

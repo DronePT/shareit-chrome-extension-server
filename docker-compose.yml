@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.3'
 
 services:
   shareit-extension-database:
@@ -11,5 +11,18 @@ services:
     environment:
       - 'MONGO_INITDB_ROOT_USERNAME=shareit'
       - 'MONGO_INITDB_ROOT_PASSWORD=shareit'
+  shareit-extension-server:
+    build: .
+    image: shareit-extension-server:latest
+    depends_on:
+        - shareit-extension-database
+    env_file:
+      - config.env
+    environment:
+      - 'NODE_ENV=production'
+      - 'MONGO_URI=mongodb://shareit:shareit@shareit-extension-database:27017/shareit'
+      - 'BCRYPT_ROUNDS=12'
+    expose:
+      - "80"
 volumes:
   shareit-extension-db:
