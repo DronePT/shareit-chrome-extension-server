@@ -11,8 +11,7 @@ services:
     environment:
       - 'MONGO_INITDB_ROOT_USERNAME=shareit'
       - 'MONGO_INITDB_ROOT_PASSWORD=shareit'
-    networks:
-      - shareit-network
+    network_mode: 'bridge'
   shareit-extension-server:
     build: .
     image: shareit-extension-server:latest
@@ -26,14 +25,8 @@ services:
       - 'BCRYPT_ROUNDS=12'
     expose:
       - "80"
-    networks:
-      - bridge
-      - shareit-network
+    network_mode: 'bridge'
+    links:
+      - 'shareit-extension-database'
 volumes:
   shareit-extension-db:
-
-networks:
-  bridge:
-    external: true
-  shareit-network:
-    external: false
