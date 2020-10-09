@@ -18,7 +18,7 @@ export async function findOneOrCreate(
       user.avatar = gravatar.url(user.email, { protocol: 'https' });
     }
 
-    user.password = bcrypt.hashSync(user.password, process.env.BCRYPT_ROUNDS || 10);
+    user.password = bcrypt.hashSync(user.password, parseInt(process.env.BCRYPT_ROUNDS || '10'));
 
     return this.create<Partial<IUser>>(user);
   }
